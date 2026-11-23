@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MRU Gym Buddy | Find Your Workout Partner at MRU</title>
+  <meta name="description" content="MRU Gym Buddy helps Mount Royal University students find compatible workout partners based on goals, schedules and interests." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=2" />
+</head>
+<body>
+
+  <!-- Animated background shapes -->
+  <div class="bg-shapes" aria-hidden="true">
+    <span class="shape shape-1"></span>
+    <span class="shape shape-2"></span>
+    <span class="shape shape-3"></span>
+    <span class="shape shape-4"></span>
+    <span class="shape shape-5"></span>
+  </div>
+
+  <header class="site-header">
+    <a class="brand" href="#/home" aria-label="MRU Gym Buddy home">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11" />
+        </svg>
+      </span>
+      <span class="brand-name">MRU Gym Buddy</span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mainNav" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+      <a href="#/home" data-route="home">Home</a>
+      <a href="#/find" data-route="find">Find a Buddy</a>
+      <a href="#/matches" data-route="matches">Matches</a>
+      <a href="#/schedule" data-route="schedule">My Schedule</a>
+      <a href="#/profile" data-route="profile">My Profile</a>
+      <a href="#/connections" data-route="connections">Connections</a>
+      <a href="#/safety" data-route="safety">Safety</a>
+      <a href="#/testplan" data-route="testplan">MVP Test Plan</a>
+    </nav>
+  </header>
+
+  <main class="app">
+
+    <!-- Progress bar (onboarding + feedback questionnaire) -->
+    <div class="progress-wrap" id="progressWrap" hidden>
+      <div class="progress-label">
+        <span id="progressText">Step 1 of 6</span>
+        <span id="progressPercent">0%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <!-- ============ HOME ============ -->
+    <section class="view is-active" id="view-home" aria-labelledby="home-title">
+      <div class="card card-hero">
+        <div class="badge">For Mount Royal University students</div>
+        <h1 id="home-title">Find Your People.<br /><span class="accent">Find Your Strength.</span></h1>
+        <p class="subhead">Meet MRU workout partners who share your goals, schedule and interests, and make staying active feel a little less lonely.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#/find">Find a Buddy</a>
+          <a class="btn btn-ghost" href="#/matches">Browse sample matches</a>
+        </div>
+        <p class="privacy-note">Free and voluntary. No student IDs, contact details or health information required.</p>
+      </div>
+
+      <div class="home-grid">
+        <div class="card info-card">
+          <h2>How it works</h2>
+          <ol class="steps-list">
+            <li><strong>Build your profile.</strong> Share your goals, experience and weekly availability in about two minutes.</li>
+            <li><strong>Meet your matches.</strong> See compatible MRU students with clear reasons why you fit.</li>
+            <li><strong>Connect safely.</strong> Send an interest, meet in public campus spaces, and decide together.</li>
+          </ol>
+        </div>
+        <div class="card info-card">
+          <h2>Why students use it</h2>
+          <ul class="benefit-list">
+            <li>Build friendships with classmates who share your interests.</li>
+            <li>Make workouts easier to stick with by finding a consistent partner.</li>
+            <li>Feel more connected to the MRU community.</li>
+          </ul>
+          <p class="fine-print">Expected benefits, not guaranteed outcomes.</p>
+        </div>
+        <div class="card info-card info-wide">
+          <h2>Your comfort comes first</h2>
+          <p class="body-text">
+            Everything is voluntary. You choose who you connect with, where you meet, and you can
+            decline or remove any connection at any time. MRU Gym Buddy is a fitness and community
+            service, not a counselling or medical service.
+          </p>
+          <a class="btn btn-ghost btn-small" href="#/safety">Read safety guidelines</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FIND A BUDDY (ONBOARDING) ============ -->
+    <section class="view" id="view-find" aria-labelledby="find-title">
+      <div class="card wizard-card" id="wizardCard"></div>
+    </section>
+
+    <!-- ============ MATCHES ============ -->
+    <section class="view" id="view-matches" aria-labelledby="matches-title">
+      <div class="card">
+        <div class="badge">Sample profiles</div>
+        <h2 id="matches-title">Your matches</h2>
+        <p class="body-text" id="matchIntro"></p>
+        <div class="notice">
+          These profiles are <strong>fictional demonstrations</strong> while real student accounts
+          are being built. "Send interest" records a demo preference on this device only. It does
+          not contact anyone.
+        </div>
+        <div class="match-toolbar">
+          <label class="toolbar-field">
+            <span>Sort by</span>
+            <select id="matchSort">
+              <option value="score">Best compatibility</option>
+              <option value="shared">Most shared time</option>
+              <option value="name">Name A to Z</option>
+            </select>
+          </label>
+          <label class="toolbar-check">
+            <input type="checkbox" id="matchOverlapOnly" />
+            <span>Only show profiles with shared availability</span>
+          </label>
+        </div>
+        <div id="matchList" class="match-list"></div>
+        <div class="actions">
+          <a class="btn btn-primary" href="#/schedule">Update my schedule</a>
+          <a class="btn btn-ghost" href="#/connections">View connections</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MY SCHEDULE ============ -->
+    <section class="view" id="view-schedule" aria-labelledby="schedule-title">
+      <div class="card">
+        <h2 id="schedule-title">My weekly availability</h2>
+        <p class="body-text">Tap cells to mark when you are usually free to work out. Matches update automatically when you save.</p>
+        <div class="schedule-wrap">
+          <div class="schedule-grid" id="scheduleGrid"></div>
+          <div class="schedule-legend">
+            <span><i class="legend-swatch selected"></i> Available</span>
+            <span><i class="legend-swatch"></i> Not selected</span>
+          </div>
+        </div>
+        <p class="schedule-count" id="scheduleCount"></p>
+        <div class="actions">
+          <button class="btn btn-primary" id="btnSaveSchedule">Save schedule</button>
+          <a class="btn btn-ghost" href="#/matches">Back to matches</a>
+        </div>
+        <p class="fine-print" style="margin-top:14px">Campus facility hours are only shown after verification. This grid reflects your personal availability, not facility opening times.</p>
+      </div>
+    </section>
+
+    <!-- ============ MY PROFILE ============ -->
+    <section class="view" id="view-profile" aria-labelledby="profile-title">
+      <div class="card" id="profileCard"></div>
+    </section>
+
+    <!-- ============ CONNECTIONS ============ -->
+    <section class="view" id="view-connections" aria-labelledby="connections-title">
+      <div class="card">
+        <h2 id="connections-title">Connections</h2>
+        <div class="notice">
+          <strong>Demo mode:</strong> MRU Gym Buddy is not yet connected to live student accounts.
+          Interests you send on the Matches page are stored only on this device as a preview of
+          how connections would work. Real connection requests will require verified student
+          accounts, mutual acceptance and privacy protections.
+        </div>
+        <h3 class="conn-subhead">Pending demo interests</h3>
+        <div id="pendingList" class="conn-list"></div>
+        <h3 class="conn-subhead">Accepted workout partners</h3>
+        <div id="acceptedList" class="conn-list"></div>
+        <div class="empty-state" id="connEmpty" hidden>
+          <p>No connections yet.</p>
+          <a class="btn btn-primary btn-small" href="#/matches" style="margin-top:10px">Find a Buddy</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SAFETY & SUPPORT ============ -->
+    <section class="view" id="view-safety" aria-labelledby="safety-title">
+      <div class="card">
+        <h2 id="safety-title">Safety &amp; support</h2>
+        <div class="safety-sections">
+          <div class="safety-block">
+            <h3>Meet in public</h3>
+            <p>Always plan first workouts in busy public campus spaces during reasonable hours. Tell a friend where you are going.</p>
+          </div>
+          <div class="safety-block">
+            <h3>Trust your instincts</h3>
+            <p>You can decline any connection, end a workout early, or remove a connection at any time. No explanation is required.</p>
+          </div>
+          <div class="safety-block">
+            <h3>Keep personal details private</h3>
+            <p>Never share passwords, financial information or your schedule outside the app. MRU Gym Buddy will never ask for your student ID or passwords.</p>
+          </div>
+          <div class="safety-block">
+            <h3>Reporting and blocking</h3>
+            <p>In the live service, every profile will have report and block tools reviewed by the student team. These controls are not active in this prototype.</p>
+          </div>
+          <div class="safety-block">
+            <h3>Not a medical service</h3>
+            <p>MRU Gym Buddy supports fitness and community. It is not counselling, therapy or medical care. MRU students can access support through MRU Student Wellness services.</p>
+          </div>
+          <div class="safety-block">
+            <h3>Your data</h3>
+            <p>This prototype stores preferences only in your browser's localStorage. Nothing is sent to a server. A future version will use secure, consent-based data handling.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FEEDBACK SURVEY ============ -->
+    <section class="view" id="view-feedback" aria-labelledby="feedback-title">
+      <div class="card" id="feedbackCard"></div>
+    </section>
+
+    <!-- ============ MVP TEST PLAN ============ -->
+    <section class="view" id="view-testplan" aria-labelledby="testplan-title">
+      <div class="card">
+        <h2 id="testplan-title">MVP Test Plan</h2>
+        <p class="body-text">
+          How we plan to test whether MRU students want a workout partner matching service.
+          This page describes a proposed plan. No testing has been completed yet and no results
+          are shown here.
+        </p>
+        <p class="body-text">
+          Based on our Value Proposition Canvas and workbook analysis, we prioritized workout
+          partner matching to address social connection and motivation. We selected a free,
+          voluntary matching prototype to test student interest before investing in a complete
+          application.
+        </p>
+
+        <div class="safety-sections">
+          <div class="safety-block">
+            <h3><span class="plan-num">1</span> Riskiest Assumption</h3>
+            <p>MRU students are willing to use a free, voluntary platform to find compatible
+            workout partners based on fitness goals, schedules, and interests.</p>
+          </div>
+
+          <div class="safety-block">
+            <h3><span class="plan-num">2</span> Target Testers</h3>
+            <p>10 Mount Royal University students, including beginners, regular gym users, and
+            students looking for workout partners.</p>
+          </div>
+
+          <div class="safety-block">
+            <h3><span class="plan-num">3</span> Testing Task</h3>
+            <p>Participants will explore the website, create a demo profile, answer matching
+            questions, review fictional sample matches, indicate interest in a workout partner,
+            and complete the feedback survey.</p>
+            <div class="actions" style="margin-top:14px">
+              <a class="btn btn-primary btn-small" href="#/find">Find a Buddy</a>
+              <a class="btn btn-ghost btn-small" href="#/feedback">Pilot Feedback Survey</a>
+            </div>
+          </div>
+
+          <div class="safety-block">
+            <h3><span class="plan-num">4</span> Evidence to Collect</h3>
+            <p><strong>Recorded automatically by the website</strong> (stored in each tester's
+            browser only):</p>
+            <ul class="safety-sublist">
+              <li>Feedback survey responses (interest in the pilot, comfort meeting new partners, comfort with sample matches, fitness goals, schedules, activities)</li>
+              <li>Demo match reactions (interested / not interested on sample profiles)</li>
+            </ul>
+            <p style="margin-top:10px"><strong>Recorded manually by researchers:</strong></p>
+            <ul class="safety-sublist">
+              <li>Whether each participant completed the matching task</li>
+              <li>Observed difficulties, questions, or confusion during testing</li>
+              <li>Verbal feedback and safety concerns raised</li>
+            </ul>
+          </div>
+
+          <div class="safety-block">
+            <h3><span class="plan-num">5</span> Observable Success Signal</h3>
+            <p><strong>Proposed success criterion</strong> (not an actual result): the test will be
+            considered successful if at least 7 out of 10 students complete the matching process
+            <em>and</em> indicate they would join the free Gym Buddy pilot.</p>
+            <p style="margin-top:10px">We selected 7 out of 10 participants as our initial success
+            threshold because it provides a practical indication of student interest before
+            investing in further development. This is a proposed benchmark rather than a
+            statistically validated threshold.</p>
+          </div>
+
+          <div class="safety-block">
+            <h3><span class="plan-num">6</span> Decisions Based on Results</h3>
+            <ul class="decision-list">
+              <li><strong>7–10 successful testers:</strong> Proceed with a small voluntary pilot at MRU.</li>
+              <li><strong>4–6 successful testers:</strong> Improve matching questions or usability and test again.</li>
+              <li><strong>0–3 successful testers:</strong> Investigate barriers and reconsider the matching approach.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="notice">
+          <strong>Please note:</strong> all student profiles shown on this site are fictional
+          demonstrations. Gym Buddy is currently a classroom prototype, not a live service.
+          Feedback survey responses are stored in each user's own browser (localStorage) and are
+          <strong>not</strong> automatically collected from different devices. Researchers must
+          export CSV files or record results manually to gather data across testers.
+        </div>
+      </div>
+    </section>
+
+    <footer class="site-footer">
+      <p>MRU Gym Buddy · Built for the Mount Royal University community</p>
+      <p class="footer-note">
+        Free · Voluntary · Your data stays on your device ·
+        <a href="#/feedback" class="footer-link">Pilot feedback survey</a>
+      </p>
+    </footer>
+  </main>
+
+  <script src="script.js?v=2"></script>
+</body>
+</html>
