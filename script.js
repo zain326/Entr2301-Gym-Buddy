@@ -628,6 +628,9 @@ function renderWizard() {
     else {
       profile = { ...wizardState, availability: { ...wizardState.availability } };
       saveProfile();
+      // New preferences mean dismissed profiles get a fresh chance;
+      // keep "Interested" selections for Connections untouched.
+      saveInterests(loadInterests().filter((i) => i.type !== "not_interested"));
       location.hash = "#/matches";
     }
   });
@@ -830,9 +833,11 @@ function renderMatches() {
     const mine = interests.find((i) => i.profile === p.id);
     [["interested", "Send interest", "btn-primary"], ["not_interested", "Not for me", "btn-ghost"]]
       .forEach(([key, label, cls]) => {
-        const b = el("button", `btn ${cls} btn-small`, label);
+        const isActive = mine && mine.type === key;
+        const btnLabel = key === "interested" && isActive ? "Interest sent · Pending (Demo)" : label;
+        const b = el("button", `btn ${cls} btn-small`, btnLabel);
         b.type = "button";
-        if (mine && mine.type === key) b.classList.add("reacted");
+        if (isActive) b.classList.add("reacted");
         b.addEventListener("click", () => {
           const list = loadInterests().filter((i) => i.profile !== p.id);
           if (!(mine && mine.type === key)) {
@@ -840,7 +845,7 @@ function renderMatches() {
           }
           saveInterests(list);
           renderMatches();
-          if (key === "interested") showToast(`Demo interest recorded for ${p.name}. See Connections.`);
+          if (key === "interested") showToast(`Interest sent for ${p.name}. It is pending under Connections (demo).`);
         });
         reactRow.appendChild(b);
       });
@@ -976,7 +981,7 @@ function renderConnections() {
       info.appendChild(el("div", "conn-name", p.name));
       info.appendChild(el("div", "conn-meta", `${p.experience} · ${p.location}`));
       item.appendChild(info);
-      item.appendChild(el("span", "demo-pill", "Demo"));
+      item.appendChild(el("span", "demo-pill", "Pending (Demo)"));
       const remove = el("button", "btn btn-ghost btn-small", "Remove");
       remove.type = "button";
       remove.addEventListener("click", () => {
@@ -1299,6 +1304,13 @@ function init() {
     profile.availability = { ...profile.availability };
     saveProfile();
     showToast("Schedule saved. Your matches have been updated.");
+  });
+
+  $("#btnResetDismissed").addEventListener("click", () => {
+    const before = loadInterests().filter((i) => i.type === "not_interested").length;
+    saveInterests(loadInterests().filter((i) => i.type !== "not_interested"));
+    renderMatches();
+    showToast(before ? "Dismissed profiles restored." : "No dismissed profiles to restore.");
   });
 
   window.addEventListener("hashchange", route);
