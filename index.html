@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=2" />
+  <link rel="stylesheet" href="style.css?v=4" />
 </head>
 <body>
 
@@ -68,7 +68,7 @@
           <a class="btn btn-primary" href="#/find">Find a Buddy</a>
           <a class="btn btn-ghost" href="#/matches">Browse sample matches</a>
         </div>
-        <p class="privacy-note">Free and voluntary. No student IDs, contact details or health information required.</p>
+        <p class="privacy-note">Free and voluntary. Student verification is demonstrated for future implementation. No real student IDs, email verification or sensitive personal information required.</p>
       </div>
 
       <div class="home-grid">
@@ -135,6 +135,7 @@
         <div class="actions">
           <a class="btn btn-primary" href="#/schedule">Update my schedule</a>
           <a class="btn btn-ghost" href="#/connections">View connections</a>
+          <button class="btn btn-ghost" id="btnResetDismissed" type="button">Reset dismissed profiles</button>
         </div>
       </div>
     </section>
@@ -174,6 +175,13 @@
           Interests you send on the Matches page are stored only on this device as a preview of
           how connections would work. Real connection requests will require verified student
           accounts, mutual acceptance and privacy protections.
+        </div>
+        <div class="notice">
+          <strong>Where your data lives:</strong> demo interests and survey responses are saved in
+          this browser's localStorage. localStorage is specific to each browser and each website
+          address, so it does <strong>not</strong> sync between Chrome and Firefox, between
+          localhost and GitHub Pages, or between different devices. Each tester must export a CSV
+          or share results manually for the team to collect data.
         </div>
         <h3 class="conn-subhead">Pending demo interests</h3>
         <div id="pendingList" class="conn-list"></div>
@@ -320,6 +328,6 @@
     </footer>
   </main>
 
-  <script src="script.js?v=2"></script>
+  <script src="script.js?v=4"></script>
 </body>
 </html>
