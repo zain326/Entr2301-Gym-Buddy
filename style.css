@@ -969,8 +969,7 @@ h2 {
   color: var(--teal-soft);
   margin-bottom: 7px;
 }
-.wizard-field input[type="text"],
-.wizard-field input[type="email"],
+.wizard-field input,
 .wizard-field select {
   font: inherit;
   width: 100%;
@@ -980,8 +979,8 @@ h2 {
   background: var(--white);
   color: var(--teal);
 }
-.wizard-field input:focus, .wizard-field select:focus,
-.wizard-field input[type="email"]:focus {
+.wizard-field input:focus,
+.wizard-field select:focus {
   outline: none;
   border-color: var(--blue-dark);
   box-shadow: 0 0 0 3px rgba(63, 126, 166, 0.15);
