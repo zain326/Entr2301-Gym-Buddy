@@ -970,6 +970,7 @@ h2 {
   margin-bottom: 7px;
 }
 .wizard-field input[type="text"],
+.wizard-field input[type="email"],
 .wizard-field select {
   font: inherit;
   width: 100%;
@@ -979,7 +980,8 @@ h2 {
   background: var(--white);
   color: var(--teal);
 }
-.wizard-field input:focus, .wizard-field select:focus {
+.wizard-field input:focus, .wizard-field select:focus,
+.wizard-field input[type="email"]:focus {
   outline: none;
   border-color: var(--blue-dark);
   box-shadow: 0 0 0 3px rgba(63, 126, 166, 0.15);
@@ -1180,6 +1182,15 @@ h2 {
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .mru-badge .opt-icon { width: 22px; height: 22px; background: transparent; color: var(--blue-deep); }
 .mru-badge .opt-icon svg { width: 14px; height: 14px; }
+.demo-verification-note {
+  font-size: 0.85rem;
+  color: #8a6d3b;
+  background: #f7f0e2;
+  border: 1px solid #eadfc8;
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin: 4px 0 0;
+}
 .question-nav .btn-back { visibility: visible; }
 
 /* schedule count */
