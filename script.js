@@ -34,7 +34,7 @@ const DAY_FULL = {
 };
 const TIME_SLOTS = ["Early morning", "Morning", "Afternoon", "Evening", "Late evening"];
 
-const AGE_RANGES = ["18 to 20", "21 to 23", "24 to 25"];
+const AGE_RANGES = ["18–20", "21–24", "25–29", "30+"];
 
 const GOAL_OPTIONS = [
   "Build muscle", "Improve strength", "Lose fat", "Improve cardiovascular fitness",
@@ -52,7 +52,7 @@ const INTEREST_OPTIONS = [
 const SOCIAL_OPTIONS = ["One-on-one workouts", "Small group workouts", "Either"];
 const INTRO_OPTIONS = [
   "In-app intro message first", "Meet in person at a public campus spot",
-  "Start with a group setting", "Whatever feels comfortable"
+  "Start with a group setting", "No preference, I'm open to any option"
 ];
 const LOCATION_OPTIONS = [
   "University fitness centre", "Outdoor spaces", "Class studios", "Anywhere on campus"
@@ -93,7 +93,7 @@ const PROFILES = [
     interests: ["General exercise", "Stretching and mobility", "Yoga"],
     location: "Outdoor spaces",
     social: "Either",
-    intro: "Whatever feels comfortable",
+    intro: "No preference, I'm open to any option",
     comfortNew: "Maybe",
     availability: { Mon: ["Morning", "Afternoon"], Tue: ["Morning"], Thu: ["Afternoon"] },
     bio: "Business student looking for a low-pressure way to move between classes."
@@ -153,7 +153,7 @@ const PROFILES = [
     interests: ["Stretching and mobility", "Yoga", "Pilates", "General exercise"],
     location: "Class studios",
     social: "Either",
-    intro: "Whatever feels comfortable",
+    intro: "No preference, I'm open to any option",
     comfortNew: "Yes",
     availability: { Tue: ["Morning", "Afternoon"], Thu: ["Morning"], Sat: ["Afternoon"] },
     bio: "Education student who prefers gentle movement and good conversation."
@@ -306,7 +306,7 @@ const FEEDBACK_QUESTIONS = [
 /* ---------- State ---------- */
 
 let currentRoute = "home";
-let wizardStep = 0;
+let wizardStep = -1; // -1 = verification demo, 0-5 = profile steps
 const wizardState = emptyProfile();
 const qAnswers = {};
 let qIndex = -1; // -1 = intro screen
@@ -479,17 +479,39 @@ const WIZARD_STEPS = [
 ];
 
 function renderWizard() {
-  wizardStep = Math.min(wizardStep, WIZARD_STEPS.length - 1);
+  const TOTAL_STEPS = WIZARD_STEPS.length + 1; // +1 for verification demo
+  wizardStep = Math.max(-1, Math.min(wizardStep, WIZARD_STEPS.length - 1));
   const card = $("#wizardCard");
   card.innerHTML = "";
 
-  setProgress(`Step ${wizardStep + 1} of ${WIZARD_STEPS.length}`, Math.round(((wizardStep + 1) / WIZARD_STEPS.length) * 100));
-
-  const step = WIZARD_STEPS[wizardStep];
-  card.appendChild(el("h2", "wizard-step-title", step.title));
-  card.appendChild(el("p", "wizard-step-sub", step.sub));
+  const displayStep = wizardStep + 1; // 0-based across all 7 steps
+  setProgress(`Step ${displayStep + 1} of ${TOTAL_STEPS}`, Math.round(((displayStep + 1) / TOTAL_STEPS) * 100));
 
   const fields = el("div", "wizard-fields");
+
+  if (wizardStep === -1) {
+    // Student verification demo (no real verification)
+    card.appendChild(el("h2", "wizard-step-title", "Student verification"));
+    card.appendChild(el("p", "wizard-step-sub", "In the live version, MRU students would verify their university email here."));
+
+    const vField = el("div", "wizard-field");
+    vField.appendChild(el("label", "", "MRU email address"));
+    const email = el("input");
+    email.type = "email";
+    email.placeholder = "name@mtroyal.ca";
+    email.autocomplete = "off";
+    email.setAttribute("aria-label", "MRU email address (demo only)");
+    vField.appendChild(email);
+    fields.appendChild(vField);
+
+    fields.appendChild(el("p", "demo-verification-note",
+      "Demo Only — Student verification will be available in a future version. No codes or emails are sent, and whatever you type here is never saved."));
+    card.appendChild(fields);
+  } else {
+    const step = WIZARD_STEPS[wizardStep];
+    card.appendChild(el("h2", "wizard-step-title", step.title));
+    card.appendChild(el("p", "wizard-step-sub", step.sub));
+  }
 
   if (wizardStep === 0) {
     const grid = el("div", "wizard-grid-2");
@@ -519,7 +541,7 @@ function renderWizard() {
     fields.appendChild(locField);
 
     const badge = el("div", "mru-badge");
-    badge.innerHTML = `${icon("pin")} Mount Royal University student`;
+    badge.innerHTML = `<span class="opt-icon">${ICONS.pin || ""}</span> Mount Royal University student`;
     fields.appendChild(badge);
   }
 
@@ -583,19 +605,19 @@ function renderWizard() {
     updateScheduleCount();
   }
 
-  card.appendChild(fields);
+  if (wizardStep >= 0) card.appendChild(fields);
 
   // nav row
   const nav = el("div", "wizard-actions");
   const dots = el("div", "wizard-dots");
-  WIZARD_STEPS.forEach((_, i) => {
-    const d = el("span", i < wizardStep ? "done" : i === wizardStep ? "current" : "");
+  for (let i = 0; i < TOTAL_STEPS; i++) {
+    const d = el("span", i < displayStep ? "done" : i === displayStep ? "current" : "");
     dots.appendChild(d);
-  });
+  }
 
   const back = el("button", "btn btn-ghost", "Back");
   back.type = "button";
-  back.disabled = wizardStep === 0;
+  back.disabled = wizardStep === -1;
   back.addEventListener("click", () => { wizardStep--; renderWizard(); });
 
   const next = el("button", "btn btn-primary",
